@@ -1,9 +1,13 @@
 ArcserverDemo::Application.routes.draw do
-  resources :homes
+  resources :homes do
+    collection do
+      get 'service_layers'
+    end  
+  end  
 
-
+  get "service_layers" => "homes#service_layers", :as => "service_layers"
   # The priority is based upon order of creation:
-  # first created -> highest priority.
+  # first created -> highest priorty.
 
   # Sample of regular route:
   #   match 'products/:id' => 'catalog#view'

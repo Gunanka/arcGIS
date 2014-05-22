@@ -1,0 +1,44 @@
+    <style>
+      html, body, #map {
+        padding:0;
+        margin:0;
+        height:100%;
+      }
+    </style>
+
+    <script>var dojoConfig = {parseOnLoad: true};</script>
+    <script src="http://js.arcgis.com/3.9/"></script>
+    <script>
+      dojo.require("esri.map");
+	  dojo.require("dijit.layout.BorderContainer");
+	  dojo.require("dijit.layout.ContentPane");
+	
+      function init() {
+        var customExtentAndSR = new esri.geometry.Extent(-12947200.702,3986037.689,-12927632.823,3996365.181, new esri.SpatialReference({"wkid":3857}));
+        //create map with new custom spatial reference and extent.  The map will be in the Goode Homolosine Land projection
+        var map = new esri.Map("map", { 
+          extent: customExtentAndSR });
+        //map service layer has a default spatial reference of 4326.
+        var mapServiceLayer1 = new esri.layers.ArcGISDynamicMapServiceLayer("http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer");
+        map.addLayer(mapServiceLayer1);
+        var mapServiceLayer2 = new esri.layers.ArcGISDynamicMapServiceLayer("http://services.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer");
+        map.addLayer(mapServiceLayer2);
+        var mapServiceLayer3 = new esri.layers.ArcGISDynamicMapServiceLayer("http://50.112.160.181:6080/arcgis/rest/services/demo/demo_gis_ms/MapServer");
+        map.addLayer(mapServiceLayer3);
+      }
+
+      dojo.ready(init);
+    </script>
+  
+  		 <div data-dojo-type="dijit.layout.BorderContainer" 
+	         data-dojo-props="design:'headline', gutters:false"
+	         style="width: 100%; height: 100%; margin: 0;">
+
+		     <div id="map" 
+		           data-dojo-type="dijit.layout.ContentPane" 
+		           data-dojo-props="region:'center'">
+		     </div>
+
+	     </div>
+
+      

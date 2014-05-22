@@ -4,7 +4,9 @@ class HomesController < ApplicationController
   def index
     
   end
-
+  
+  def service_layers
+  end  
   # GET /homes/1
   # GET /homes/1.json
   def show
