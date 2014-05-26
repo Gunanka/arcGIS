@@ -9,6 +9,10 @@ class HomesController < ApplicationController
   end  
 
   def example
+  end
+  
+  def open_info_window_immediately
+   render  :layout => false
   end  
   # GET /homes/1
   # GET /homes/1.json

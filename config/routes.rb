@@ -9,6 +9,8 @@ ArcserverDemo::Application.routes.draw do
 
   get "example" => "homes#example", :as => "example"
 
+  get "open_info_window_immediately" => "homes#open_info_window_immediately", as: :open_info_window_immediately
+
   # The priority is based upon order of creation:
   # first created -> highest priorty.
 
