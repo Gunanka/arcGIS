@@ -1,0 +1,89 @@
+    <style>
+      html, body, #map {
+        padding:0;
+        margin:0;
+        height:100%;
+      }
+    </style>
+
+    <script>var dojoConfig = {parseOnLoad: true};</script>
+    <script src="http://js.arcgis.com/3.9/"></script>
+    <script>
+      dojo.require("esri.map");
+      dojo.require("dijit.layout.BorderContainer");
+      dojo.require("dijit.layout.ContentPane");
+      dojo.require("esri/layers/DynamicMapServiceLayer");
+      dojo.require("esri/tasks/QueryTask");
+      dojo.require("esri/tasks/query");
+      dojo.require("esri/symbols/SimpleMarkerSymbol");
+      dojo.require("esri/InfoTemplate");
+      dojo.require("dojo/_base/Color");
+      dojo.require("dojo/domReady!");
+      dojo.require("esri/tasks/FeatureSet");
+      dojo.require("dojo/dom");
+      dojo.require("dojo/on");
+       
+      function init() {
+  //create map and add layer
+  map = new esri.Map("mapDiv");
+  var layer = new esri.layers.ArcGISDynamicMapServiceLayer("http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer");
+  map.addLayer(layer);
+
+  //initialize query task
+  queryTask = new esri.tasks.QueryTask("http://sampleserver1.arcgisonline.com/ArcGIS/rest/services/Specialty/ESRI_StatesCitiesRivers_USA/MapServer/0");
+
+  //initialize query
+  query = new esri.tasks.Query();
+  query.returnGeometry = true;
+  query.outFields = ["CITY_NAME", "STATE_NAME", "POP1990"];
+
+  //initialize InfoTemplate
+  infoTemplate = new esri.InfoTemplate("${CITY_NAME}", "Name : ${CITY_NAME}<br/> State : ${STATE_NAME}<br />Population : ${POP1990}");
+
+  //create symbol for selected features
+  symbol = new esri.symbol.SimpleMarkerSymbol();
+  symbol.setStyle(esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE);
+  symbol.setSize(10);
+  symbol.setColor(new dojo.Color([255,123,0,0.5]));
+}
+
+ function executeQueryTask(population) {
+    //set query based on what user typed in for population;
+    query.where = "POP04 > " + population;
+
+    //execute query
+    queryTask.execute(query,showResults());
+  }
+
+  function showResults(featureSet) {
+    //remove all graphics on the maps graphics layer
+    map.graphics.clear();
+
+    //Performance enhancer - assign featureSet array to a single variable.
+    var resultFeatures = featureSet.features;
+
+    //Loop through each feature returned
+    for (var i=0, il=resultFeatures.length; i<il; i++) {
+      alert(resultFeatures.length);
+      //Get the current feature from the featureSet.
+      //Feature is a graphic
+      var graphic = resultFeatures[i];
+      graphic.setSymbol(symbol);
+
+      //Set the infoTemplate.
+      graphic.setInfoTemplate(infoTemplate);
+
+      //Add graphic to the map graphics layer.
+      map.graphics.add(graphic);
+    }
+  }
+         dojo.ready(init);
+          
+    </script>
+  
+       <br/>
+    US city population greater than : <input type="text" id="population" value="500000" />
+    <input type="button" value="Get Details" onclick="executeQueryTask(dojo.byId('population').value);" />
+
+    <div id="mapDiv" style="width:600px; height:600px; border:1px solid #000;"></div>
+    Click on a city once it's highlighted to get an InfoWindow.

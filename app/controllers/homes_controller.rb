@@ -7,6 +7,9 @@ class HomesController < ApplicationController
   
   def service_layers
   end  
+
+  def example
+  end  
   # GET /homes/1
   # GET /homes/1.json
   def show

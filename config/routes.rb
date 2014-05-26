@@ -6,6 +6,9 @@ ArcserverDemo::Application.routes.draw do
   end  
 
   get "service_layers" => "homes#service_layers", :as => "service_layers"
+
+  get "example" => "homes#example", :as => "example"
+
   # The priority is based upon order of creation:
   # first created -> highest priorty.
 

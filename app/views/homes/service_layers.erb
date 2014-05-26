@@ -10,9 +10,19 @@
     <script src="http://js.arcgis.com/3.9/"></script>
     <script>
       dojo.require("esri.map");
-	  dojo.require("dijit.layout.BorderContainer");
-	  dojo.require("dijit.layout.ContentPane");
-	
+      dojo.require("dijit.layout.BorderContainer");
+      dojo.require("dijit.layout.ContentPane");
+      dojo.require("esri/layers/DynamicMapServiceLayer");
+      dojo.require("esri/tasks/QueryTask");
+      dojo.require("esri/tasks/query");
+      dojo.require("esri/symbols/SimpleMarkerSymbol");
+      dojo.require("esri/InfoTemplate");
+      dojo.require("dojo/_base/Color");
+      dojo.require("dojo/domReady!");
+      dojo.require("esri/tasks/FeatureSet");
+      dojo.require("dojo/dom");
+      dojo.require("dojo/on");
+       
       function init() {
         var customExtentAndSR = new esri.geometry.Extent(-12947200.702,3986037.689,-12927632.823,3996365.181, new esri.SpatialReference({"wkid":3857}));
         //create map with new custom spatial reference and extent.  The map will be in the Goode Homolosine Land projection
@@ -25,20 +35,69 @@
         map.addLayer(mapServiceLayer2);
         var mapServiceLayer3 = new esri.layers.ArcGISDynamicMapServiceLayer("http://50.112.160.181:6080/arcgis/rest/services/demo/demo_gis_ms/MapServer");
         map.addLayer(mapServiceLayer3);
+
+
+          //initialize query task
+          var queryTask = new esri.tasks.QueryTask("http://50.112.160.181:6080/arcgis/rest/services/demo/demo_gis_ms/MapServer/8");
+
+          //initialize query
+          var query = new esri.tasks.Query();
+          query.returnGeometry = false;
+          query.outFields = ["facility id", "watertype", "subtypecode", "projectnumber", "lifecyclestatus", "material", "hyperlink", "pressurezone", "exteriorcoating", "liningtype", "pipeclass", "roughness", "diameter", "pressurerating", "comments", "installdate", "shape", "st_length", "objectid"];
+          
+          // query.geometry = evt.mapPoint;
+          queryTask.execute(query, showResults());
+          
+            function showResults(featureSet) {
+              alert(featureSet);
+              alert("Hi");
+              //remove all graphics on the maps graphics layer
+              map.graphics.clear();
+
+              //Performance enhancer - assign featureSet array to a single variable.
+              var resultFeatures = featureSet.features;
+              alert(resultFeatures.length)
+              //Loop through each feature returned
+              for (var i=0, il=resultFeatures.length; i<il; i++) {
+                //Get the current feature from the featureSet.
+                //Feature is a graphic
+                alert(alertFeatures[i]);
+                var graphic = resultFeatures[i];
+                graphic.setSymbol(symbol);
+
+                //Set the infoTemplate.
+                graphic.setInfoTemplate(infoTemplate);
+
+                //Add graphic to the map graphics layer.
+                map.graphics.add(graphic);
+              }
+            };
+
+          //initialize InfoTemplate
+          infoTemplate = new esri.InfoTemplate(["${FACILITY ID}", "${WATERTYPE}", "${SUBTYPECODE}", "${PROJECTNUMBER}", "${LIFECYCLESTATUS}", "${MATERIAL}", "${HYPERLINK}", "${PRESSUREZONE}", "${EXTERIORCOATING}", "${LININGTYPE}", "${PIPECLASS}", "${ROUGHNESS}", "${DIAMETER}", "${PRESSURERATING}", "${COMMENTS}", "${INSTALLDATE}", "${SHAPE}", "${ST_LENGTH}", "${OBJECTID}"]);
+
+          //create symbol for selected features
+          symbol = new esri.symbol.SimpleMarkerSymbol();
+          symbol.setStyle(esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE);
+          symbol.setSize(10);
+          symbol.setColor(new dojo.Color([255,255,0,0.5]));
+        
       }
 
-      dojo.ready(init);
+         dojo.ready(init);
+          
     </script>
   
-  		 <div data-dojo-type="dijit.layout.BorderContainer" 
-	         data-dojo-props="design:'headline', gutters:false"
-	         style="width: 100%; height: 100%; margin: 0;">
+       <div data-dojo-type="dijit.layout.BorderContainer" 
+           data-dojo-props="design:'headline', gutters:false"
+           style="width: 100%; height: 100%; margin: 0;">
 
-		     <div id="map" 
-		           data-dojo-type="dijit.layout.ContentPane" 
-		           data-dojo-props="region:'center'">
-		     </div>
+         <div id="map" 
+               data-dojo-type="dijit.layout.ContentPane" 
+               data-dojo-props="region:'center'">
+               <br/>
+               </div>
 
-	     </div>
+       </div>
 
       
