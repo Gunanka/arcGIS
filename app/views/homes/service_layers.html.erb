@@ -1,36 +1,38 @@
-    <style>
-      html, body, #map {
-        padding:0;
-        margin:0;
-        height:100%;
-      }
-    </style>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <!--The viewport meta tag is used to improve the presentation and behavior of the samples 
+      on iOS devices-->
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+    <title>QueryTask with geometry, queries with multiple results at the same location are displayed in an InfoWindow</title>
 
-    <script>var dojoConfig = {parseOnLoad: true};</script>
+    <link rel="stylesheet" href="http://js.arcgis.com/3.9/js/dojo/dijit/themes/claro/claro.css">
+    <link rel="stylesheet" href="http://js.arcgis.com/3.9/js/esri/css/esri.css">
+    
     <script src="http://js.arcgis.com/3.9/"></script>
     <script>
       dojo.require("esri.map");
-      dojo.require("dijit.layout.BorderContainer");
-      dojo.require("dijit.layout.ContentPane");
-      dojo.require("esri/layers/DynamicMapServiceLayer");
-      dojo.require("esri/tasks/QueryTask");
-      dojo.require("esri/tasks/query");
-      dojo.require("esri/symbols/SimpleMarkerSymbol");
-      dojo.require("esri/InfoTemplate");
-      dojo.require("dojo/_base/Color");
-      dojo.require("dojo/domReady!");
-      dojo.require("esri/tasks/FeatureSet");
-      dojo.require("dojo/dom");
-      dojo.require("dojo/on");
+      dojo.require("esri.tasks.query");
        
+      // require(["esri/config"], function(esriConfig) { 
+      //     esriConfig.defaults.io.proxyUrl = "http://sampleserver1.arcgisonline.com/"
+      //     esriConfig.defaults.io.alwaysUseProxy = true;
+      //  });
+
       var map, queryTask, query;
       var featureSet;
+
+      
        
       function init() {
         var customExtentAndSR = new esri.geometry.Extent(-12947200.702,3986037.689,-12927632.823,3996365.181, new esri.SpatialReference({"wkid":3857}));
         //create map with new custom spatial reference and extent.  The map will be in the Goode Homolosine Land projection
         map = new esri.Map("map", { 
-          extent: customExtentAndSR });
+          extent: customExtentAndSR ,
+          basemap: "satellite", 
+          zoom: 15
+          });
         //map service layer has a default spatial reference of 4326.
         var mapServiceLayer1 = new esri.layers.ArcGISDynamicMapServiceLayer("http://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer");
         map.addLayer(mapServiceLayer1);
@@ -53,17 +55,11 @@
 
         //build query filter
         query = new esri.tasks.Query();
-
-
-        // queryTask.executeForCount(query,function(count){
-        //   alert(count);
-        // },function(error){
-        //   alert(error);
-        // });
-
         query.outSpatialReference = {"wkid":3857};
+        query.where = "1=1";
+        //query.outFields = ["facilityid"];
         query.returnGeometry = true;
-        query.outFields = ["facility id", "watertype"];
+        query.outFields = ["facilityid", "watertype", "subtypecode", "projectnumber", "lifecyclestatus", "material", "hyperlink", "pressurezone", "exteriorcoating", "liningtype", "pipeclass", "roughness", "diameter", "pressurerating", "comments", "installdate", "shape", "objectid"];
       } 
 
       function executeQueryTask(evt) {
@@ -76,113 +72,21 @@
         //set query geometry = to evt.mapPoint Geometry
         query.geometry = evt.mapPoint;
 
+
         //Execute task and call showResults on completion
-        // queryTask.execute(query, function(fset) {
-        //   if (fset.features.length === 1) {
-        //     showFeature(fset.features[0],evt);
-        //   } else if (fset.features.length !== 0) {
-        //     showFeatureSet(fset,evt);
-        //   }
-        // });
-        queryTask.execute(query, showResults());
+        queryTask.execute(query, function(fset) {
+          alert(fset.features.length);
+          if (fset.features.length === 1) {
+            showFeature(fset.features[0],evt);
+          } else if (fset.features.length !== 0) {
+            showFeatureSet(fset,evt);
+          }
+        });
+        //queryTask.execute(query, showResults);
       }
 
-      function showResults(featureSet, evt) {
-              alert(featureSet.features.length);
-              //remove all graphics on the maps graphics layer
-              map.graphics.clear();
-
-              //Performance enhancer - assign featureSet array to a single variable.
-              var resultFeatures = featureSet.features;
-              alert(resultFeatures.length)
-              //Loop through each feature returned
-              for (var i=0, il=resultFeatures.length; i<il; i++) {
-                //Get the current feature from the featureSet.
-                //Feature is a graphic
-                alert(alertFeatures[i]);
-                var graphic = resultFeatures[i];
-                graphic.setSymbol(symbol);
-
-                //Set the infoTemplate.
-                graphic.setInfoTemplate(infoTemplate);
-
-                //Add graphic to the map graphics layer.
-                map.graphics.add(graphic);
-              }
-      };
-
-      function showResultss(feature,evt) {
-        alert("2");
-        // map.graphics.clear();
-
-        // //set symbol
-        // var symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_SOLID, new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255,0,0]), 2), new dojo.Color([255,255,0,0.5]));
-        // feature.setSymbol(symbol);
-
-        // //construct infowindow title and content
-        // var attr = feature.attributes;
-        // var title = "attr.FIELD_NAME";
-        // var content = "content"
-        // map.graphics.add(feature);
-
-        // map.infoWindow.setTitle(title);
-        // map.infoWindow.setContent(content);
-
-        // (evt) ? map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint)) : null;
-      }
-
-      function showError(error) {
-        alert("3");
-        // //remove all graphics on the maps graphics layer
-        // map.graphics.clear();
-        // var screenPoint = evt.screenPoint;
-
-        // featureSet = fset;
-
-        // var numFeatures = featureSet.features.length;
-
-        // //QueryTask returns a featureSet.  Loop through features in the featureSet and add them to the infowindow.
-        // var title = "You have selected " + numFeatures + " fields.";
-        // var content = "Please select desired field from the list below.<br />";
-
-        // for (var i=0; i<numFeatures; i++) {
-        //   var graphic = featureSet.features[i];
-        //   content = content + "graphic.attributes.FIELD_NAME" + " Field (<A href='#' onclick='showFeature(featureSet.features[" + i + "]);'>show</A>)<br/>";
-        // }
-
-        // map.infoWindow.setTitle(title);
-        // map.infoWindow.setContent(content);
-        // map.infoWindow.show(screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
-      }
-
-      dojo.ready(init);
-
-      //     //initialize query task
-      //     var queryTask = new esri.tasks.QueryTask("http://50.112.160.181:6080/arcgis/rest/services/demo/demo_gis_ms/MapServer/8");
-
-      //     //initialize query
-      //     var query = new esri.tasks.Query();
-      //     var featureSet;
-      //     query.returnGeometry = false;
-      //     query.outFields = ["facility id", "watertype", "subtypecode", "projectnumber", "lifecyclestatus", "material", "hyperlink", "pressurezone", "exteriorcoating", "liningtype", "pipeclass", "roughness", "diameter", "pressurerating", "comments", "installdate", "shape", "st_length", "objectid"];
-          
-
-      //     queryTask.executeForCount(query, showCount(), showError()) ;
-          
-      //     function showCount(count){
-      //       alert(count);
-      //       console.log(count) ;
-      //     }
-      //     // query.geometry = evt.mapPoint;
-      //     queryTask.execute(query, showResults(), showError());
-            
-      //       function showError(error){
-      //         console.log(error);
-      //       }
-
-
-      //       function showResults(featureSet) {
-      //         alert(featureSet);
+      // function showResults(featureSet) {
+      //         alert(JSON.stringify(featureSet));
       //         //remove all graphics on the maps graphics layer
       //         map.graphics.clear();
 
@@ -203,33 +107,80 @@
       //           //Add graphic to the map graphics layer.
       //           map.graphics.add(graphic);
       //         }
-      //       };
+      // };
 
-      //     //initialize InfoTemplate
-      //     infoTemplate = new esri.InfoTemplate(["${FACILITY ID}", "${WATERTYPE}", "${SUBTYPECODE}", "${PROJECTNUMBER}", "${LIFECYCLESTATUS}", "${MATERIAL}", "${HYPERLINK}", "${PRESSUREZONE}", "${EXTERIORCOATING}", "${LININGTYPE}", "${PIPECLASS}", "${ROUGHNESS}", "${DIAMETER}", "${PRESSURERATING}", "${COMMENTS}", "${INSTALLDATE}", "${SHAPE}", "${ST_LENGTH}", "${OBJECTID}"]);
+      function showFeature(feature,evt) {
+        alert(JSON.stringify(feature));
+        map.graphics.clear();
 
-      //     //create symbol for selected features
-      //     symbol = new esri.symbol.SimpleMarkerSymbol();
-      //     symbol.setStyle(esri.symbol.SimpleMarkerSymbol.STYLE_SQUARE);
-      //     symbol.setSize(10);
-      //     symbol.setColor(new dojo.Color([255,255,0,0.5]));
-        
-      // }
+        //set symbol
+        var symbol = new esri.symbol.SimpleFillSymbol(esri.symbol.SimpleFillSymbol.STYLE_SOLID, new esri.symbol.SimpleLineSymbol(esri.symbol.SimpleLineSymbol.STYLE_SOLID, new dojo.Color([255,0,0]), 2), new dojo.Color([255,255,0,0.5]));
+        feature.setSymbol(symbol);
 
-         //dojo.ready(init);
+        //construct infowindow title and content
+        var attr = feature.attributes;
+        var title = attr.FIELD_NAME;
+        var content = "Field ID : " + attr.FIELD_KID
+                    + "<br />Produces Gas : " + attr.PROD_GAS
+                    + "<br />Produces Oil : " + attr.PROD_OIL
+                    + "<br />Status : " + attr.STATUS;
+        map.graphics.add(feature);
+
+        map.infoWindow.setTitle(title);
+        map.infoWindow.setContent(content);
+
+        (evt) ? map.infoWindow.show(evt.screenPoint,map.getInfoWindowAnchor(evt.screenPoint)) : null;
+      }
+
+      function showFeatureSet(fset,evt) {
+        alert(JSON.stringify(fset));
+        //remove all graphics on the maps graphics layer
+        map.graphics.clear();
+        var screenPoint = evt.screenPoint;
+
+        featureSet = fset;
+
+        var numFeatures = featureSet.features.length;
+
+        //QueryTask returns a featureSet.  Loop through features in the featureSet and add them to the infowindow.
+        var title = "You have selected " + numFeatures + " fields.";
+        var content = "Please select desired field from the list below.<br />";
+
+        for (var i=0; i<numFeatures; i++) {
+          var graphic = featureSet.features[i];
+          content = content + graphic.attributes.FIELD_NAME + " Field (<A href='#' onclick='showFeature(featureSet.features[" + i + "]);'>show</A>)<br/>";
+        }
+        map.infoWindow.setTitle(title);
+        map.infoWindow.setContent(content);
+        map.infoWindow.show(screenPoint,map.getInfoWindowAnchor(evt.screenPoint));
+      }  
+
+      dojo.ready(init);
+
           
     </script>
-  
-       <div data-dojo-type="dijit.layout.BorderContainer" 
+    </head>
+    <style>
+      html, body, #map {
+        padding:0;
+        margin:0;
+        height:100%;
+      }
+    </style>
+      <body class="claro">
+        <div data-dojo-type="dijit.layout.BorderContainer" 
            data-dojo-props="design:'headline', gutters:false"
            style="width: 100%; height: 100%; margin: 0;">
 
          <div id="map" 
                data-dojo-type="dijit.layout.ContentPane" 
                data-dojo-props="region:'center'">
-               <br/>
-               </div>
+            <br/>
+        </div>
 
        </div>
+    </html>
+
+       
 
       

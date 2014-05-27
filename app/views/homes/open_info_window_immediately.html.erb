@@ -18,6 +18,11 @@
       var map, queryTask, query;
       var featureSet;
 
+      // require(["esri/config"], function(esriConfig) { 
+      //     esriConfig.defaults.io.proxyUrl = "http://sampleserver1.arcgisonline.com"
+      //     esriConfig.defaults.io.alwaysUseProxy = false;
+      //  });
+
       function init() {
         var startExtent = new esri.geometry.Extent({"xmin":-11207421,"ymin":4469708,"xmax":-10718224,"ymax":4836606,"spatialReference":{"wkid":102100}} );
         map = new esri.Map("mapDiv", {
@@ -92,7 +97,6 @@
       }
 
       function showFeatureSet(fset,evt) {
-        alert(featureSet.features.length);
         //remove all graphics on the maps graphics layer
         map.graphics.clear();
         var screenPoint = evt.screenPoint;

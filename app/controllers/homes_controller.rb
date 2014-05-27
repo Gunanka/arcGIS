@@ -6,6 +6,7 @@ class HomesController < ApplicationController
   end
   
   def service_layers
+    render  :layout => false
   end  
 
   def example
