@@ -95,7 +95,11 @@
         //construct infowindow title and content
         var attr = feature.attributes;
         var title = attr.installdate;
-        var content = "<span class='arrow'></span><a href='#'><span class='close' style='float: right'  onclick='map.infoWindow.hide();'>x</span></a><p style='font-size: 18px;'><b>Old Pipes in the System </b></p><p style='font-size: 35px;'>" + (attr.installdate/100000) + " years ago</p><br/><span><img src='/assets/uComm.gif' /><a href='#'>ucomm</a> </span><span style='padding-left: 29px;'><img src='/assets/create-task.gif' /><a href='#'>create task</a> </span>"
+        var installdate = new Date(attr.installdate);
+        var today = new Date();
+        var current_year = today.getFullYear();
+
+        var content = "<span class='arrow'></span><span class='close' style='float: right'  onclick='map.infoWindow.hide();'><b>x</b></span><p style='font-size: 18px; clear: both;'><b>old pipes in the system </b></p><p style='font-size: 38px;' >" + (current_year - installdate.getUTCFullYear() ) + " years <input type='button' class='btnNext' /><br/>ago</p><<span><img src='/assets/uComm.gif' />ucomm</span><span style='padding-left: 29px;'><img src='/assets/create-task.gif' />create task</span>"
         
         map.graphics.add(feature);
 
@@ -138,11 +142,17 @@
         margin:0;
         height:100%;
       }
-
+      .btnNext
+      {
+        float: right;
+        margin-top: 40px;
+        background: url(/assets/nextbutton.gif) no-repeat left top;
+      }
+      
       .esriPopup .contentPane  {
         background-color: #0F243E !important ;
-        height: 216px !important;
-        width: 256px !important ;
+        height: 236px !important;
+        width: 266px !important ;
         padding: 5px 7px !important ;
         color: #fff !important ;
         font-family: MS Reference Sans serif, Calibri, Arial !important ;
@@ -154,10 +164,36 @@
         color: #0F243E !important ;
         background: url(/assets/arrow.png) no-repeat left top;
       }
-      .esriPopup .pointer.bottomLeft {
+      .esriPopup .pointer.topLeft {
+        color: #0F243E !important ;
+        background: url(/assets/arrow-top.png) no-repeat left top;
+      }
+
+      .esriPopup .pointer.top{
+        background: url(/assets/arrow-top.png) no-repeat left top;
+        color: #0F243E !important ;
+      }
+      .esriPopup .outerPointer.right {
+        background: url(/assets/arrow-right.png) no-repeat left top;
+        color: #0F243E !important ;
+      }
+      .esriPopup .pointer.topRight {
+        background: url(/assets/arrow-top.png) no-repeat left top;
         color: #0F243E !important ;
       }  
-
+      .esriPopup .pointer.bottomRight{
+        background: url(/assets/arrow-bottom.png) no-repeat left top;
+        color: #0F243E !important ;
+      }
+      .esriPopup .pointer.bottom {
+        background: url(/assets/arrow-bottom.png) no-repeat left top;
+        color: #0F243E !important ;
+      }  
+      .esriPopup .pointer.bottomLeft{
+        background: url(/assets/arrow-bottom.png) no-repeat left top;
+        color: #0F243E !important ;
+      }  
+      }
     </style>
       <body class="claro">
         <div data-dojo-type="dijit.layout.BorderContainer" 
