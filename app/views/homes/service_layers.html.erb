@@ -99,7 +99,7 @@
         var today = new Date();
         var current_year = today.getFullYear();
 
-        var content = "<span class='arrow'></span><span class='close' style='float: right'  onclick='map.infoWindow.hide();'><b>x</b></span><p style='font-size: 18px; clear: both;'><b>old pipes in the system </b></p><p style='font-size: 38px;' >" + (current_year - installdate.getUTCFullYear() ) + " years <input type='button' class='btnNext' /><br/>ago</p><<span><img src='/assets/uComm.gif' />ucomm</span><span style='padding-left: 29px;'><img src='/assets/create-task.gif' />create task</span>"
+        var content = "<p style='font-size: 18px; margin: 0px;'><b>old pipes in the <span class='arrow'></span><span class='close' style='float: right; cursor:pointer;'  onclick='map.infoWindow.hide();'><b>x</b></span><br/>system </b></p><p style='font-size: 38px; padding-left: 52px;' >" + (current_year - installdate.getUTCFullYear() ) + " years <span><input type='button' class='btnNext' style='padding: 15px;'/><br/>ago</p><span style='padding-left: 15px;'><img src='/assets/uComm.gif' style='position: absolute;left: 7px;bottom: 7px;'>ucomm</span><span style='padding-left: 107px;'><img src='/assets/create-task.gif' style=' position: absolute; bottom: 7px;right: 109px;'>create task</span>"
         
         map.graphics.add(feature);
 
@@ -147,51 +147,64 @@
         float: right;
         margin-top: 40px;
         background: url(/assets/nextbutton.gif) no-repeat left top;
+        border: none;
+        width: 19px;
       }
+
+
       
       .esriPopup .contentPane  {
-        background-color: #0F243E !important ;
-        height: 236px !important;
-        width: 266px !important ;
-        padding: 5px 7px !important ;
-        color: #fff !important ;
-        font-family: MS Reference Sans serif, Calibri, Arial !important ;
-        -moz-box-shadow: 3px 3px 5px 6px #ccc !important ;
-        -webkit-box-shadow: 3px 3px 5px 6px #ccc !important ;
-        box-shadow: 4px 6px 6px 0px #000 !important ;
+          background-color: #0F243E !important;
+          width: 266px !important;
+          padding: 0px 7px !important;
+          color: #fff !important;
+          font-family: MS Reference Sans serif, Calibri, Arial !important;
+          -moz-box-shadow: 3px 3px 5px 6px #ccc !important;
+          -webkit-box-shadow: 3px 3px 5px 6px #ccc !important;
+          box-shadow: 4px 6px 6px 0px #000 !important;
+          border: none;
       } 
       .esriPopup .outerPointer.left {
         color: #0F243E !important ;
         background: url(/assets/arrow.png) no-repeat left top;
+        height: 19px;
+        left: 4px;
       }
       .esriPopup .pointer.topLeft {
         color: #0F243E !important ;
         background: url(/assets/arrow-top.png) no-repeat left top;
+        height: 19px;
       }
 
       .esriPopup .pointer.top{
         background: url(/assets/arrow-top.png) no-repeat left top;
         color: #0F243E !important ;
+        height: 19px;
       }
       .esriPopup .outerPointer.right {
         background: url(/assets/arrow-right.png) no-repeat left top;
         color: #0F243E !important ;
+        height: 19px;
       }
       .esriPopup .pointer.topRight {
         background: url(/assets/arrow-top.png) no-repeat left top;
         color: #0F243E !important ;
+        height: 19px;
       }  
       .esriPopup .pointer.bottomRight{
         background: url(/assets/arrow-bottom.png) no-repeat left top;
         color: #0F243E !important ;
+        height: 19px;
       }
       .esriPopup .pointer.bottom {
         background: url(/assets/arrow-bottom.png) no-repeat left top;
         color: #0F243E !important ;
+        height: 19px;
       }  
       .esriPopup .pointer.bottomLeft{
         background: url(/assets/arrow-bottom.png) no-repeat left top;
         color: #0F243E !important ;
+        height: 19px;
       }  
       }
     </style>
