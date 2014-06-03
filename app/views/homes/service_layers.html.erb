@@ -99,7 +99,7 @@
         var today = new Date();
         var current_year = today.getFullYear();
 
-        var content = "<p style='font-size: 18px; margin: 0px;'><b>old pipes in the <span class='arrow'></span><span class='close' style='float: right; cursor:pointer;'  onclick='map.infoWindow.hide();'><b>x</b></span><br/>system </b></p><p style='font-size: 38px; padding-left: 52px;' >" + (current_year - installdate.getUTCFullYear() ) + " years <span><input type='button' class='btnNext' style='padding: 15px;'/><br/>ago</p><span style='padding-left: 15px;'><img src='/assets/uComm.gif' style='position: absolute;left: 7px;bottom: 7px;'>ucomm</span><span style='padding-left: 107px;'><img src='/assets/create-task.gif' style=' position: absolute; bottom: 7px;right: 109px;'>create task</span>"
+        var content = "<p style='font-size: 18px; margin: 0px;'><b>old pipes in the <span class='arrow'></span><span class='close' style='float: right; cursor:pointer;'  onclick='map.infoWindow.hide();'><b>x</b></span><br/>system </b></p><p style='font-size: 38px; padding-left: 52px;' >" + (current_year - installdate.getUTCFullYear() ) + " years <span><input type='button' class='btnNext' style='padding: 15px;'/><br/>ago</p><span style='padding-left: 38px;'><img src='/assets/uComm.gif' style='position: absolute;left: 20px;bottom: 16px;'>ucomm</span><span style='padding-left: 90px; right: 20px;'><img src='/assets/create-task.gif' style=' position: absolute; bottom: 17px;right: 100px;'>create task</span>"
         
         map.graphics.add(feature);
 
@@ -156,6 +156,7 @@
       .esriPopup .contentPane  {
           background-color: #0F243E !important;
           width: 266px !important;
+          height: 246px !important;
           padding: 0px 7px !important;
           color: #fff !important;
           font-family: MS Reference Sans serif, Calibri, Arial !important;
